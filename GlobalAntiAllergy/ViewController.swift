@@ -8,13 +8,27 @@
 
 import UIKit
 
-struct ProductScanned{
+struct webdescription: Decodable{
+    let code : String
+    let product : ProductScanned
+}
+struct ProductScanned: Decodable{
+    
     let product_name_en:String
     let image_front_small_url:String
     let ingredients_text_with_allergens_en: String
     
+//    init(json: [String: Any] ){
+//        product_name_en = json["code"] as? String ?? ""
+//        //product_name_en = json["product"] ["product_name_en"] as! String
+//        image_front_small_url = json["image_front_small_url"] as? String ?? ""
+//        ingredients_text_with_allergens_en = json["ingredients_text_with_allergens_en"] as? String ?? ""
+//
+//    }
+
 }
 class ViewController: UIViewController {
+    let codescanned: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,8 +41,9 @@ class ViewController: UIViewController {
             //let dataasString = String(data: data, encoding:.utf8)
             //print (dataasString)
             do {
-                let json = try JSONSerialization.jsonObject(with:data, options:.mutableContainers)
-            print (json)
+                let webDescription = try JSONDecoder().decode(webdescription.self, from: data)
+ //               let json = try JSONSerialization.jsonObject(with:data, options:.mutableContainers)
+                print (webDescription.product.product_name_en)
             } catch let jsonErr {
                 print ("error serializinf json:", jsonErr)
             }
