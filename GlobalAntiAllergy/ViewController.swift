@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        let jsonUrlString = "https://world.openfoodfacts.org/api/v0/product/3396411224584.json"
+        let jsonUrlString = "https://world.openfoodfacts.org/api/v0/product/812475012316.json"
         guard let url = URL(string:jsonUrlString) else
         {return }
         URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -49,11 +49,12 @@ class ViewController: UIViewController {
             do {
                 let webDescription = try JSONDecoder().decode(webdescription.self, from: data)
                 let json = try JSONSerialization.jsonObject(with:data, options:.mutableContainers)
-                //print(json)
-                print (webDescription.product.product_name!)
-                print(webDescription.product.countries!)
-                print(webDescription.product.image_front_small_url!)
+                print(json)
+                print (webDescription.product.product_name)
+                print(webDescription.product.countries)
+                print(webDescription.product.image_url)
                 print(webDescription.product.ingredients_text_with_allergens)
+                print(self.booleansearchallergentEng(ingredients: webDescription.product.ingredients_text_with_allergens!, allergent: "aloe"))
                 //print(webDescription.product.additives)
             } catch let jsonErr {
                 print ("error serializinf json:", jsonErr)
@@ -67,7 +68,19 @@ class ViewController: UIViewController {
     }
     
     
+    func booleansearchallergentEng( ingredients: String, allergent:String) -> Bool {
+        let ingredientArr = ingredients.components(separatedBy: [":", ",", " "])
     
+        for (Stringx) in ingredientArr{
+            if (Stringx == allergent){
+                    return true
+                }
+                
+            }
+        
+        return false
+    
+    }
     func booleansearchallergent( ingredients: String, allergent: String, language: String) -> Bool{
         let ingredientArr = ingredients.components(separatedBy: [":", ",", " "])
         let keyword: [String] = translate(allergent: allergent, Languagename: language)
@@ -82,6 +95,7 @@ class ViewController: UIViewController {
         return false
     }
     
+    //inner method of above
     func translate(allergent: String, Languagename: String) -> [String]{
         if (Languagename == "french")&&(allergent == "peanut"){
             return ["",""]
